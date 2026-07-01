@@ -17,8 +17,8 @@ Why an Anchr fork at all (vs. just running `verygoodplugins/main`):
    adding *agent-controlled outbound WhatsApp* completes the
    ["lethal trifecta"](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/)
    and lets a single prompt injection exfiltrate or impersonate.
-2. **Chat allowlist (belt + suspenders).** A `chat-allowlist.txt` at the repo
-   root narrows what the bridge writes to disk *and* what the MCP server
+2. **Chat allowlist (belt + suspenders).** A `chat-allowlist.txt` at the
+   server root (`servers/whatsapp/`) narrows what the bridge writes to disk *and* what the MCP server
    exposes to a connected agent. Enforced in both Go (bridge) and Python (MCP
    server) so an oversight in one layer doesn't open the floodgates.
 3. **Configurable bridge port.** Upstream defaults to `8080`, which collides
@@ -34,16 +34,15 @@ through to verygoodplugins' code.
 Steps 1–4 are one-time. Steps 5–7 are how you bring it up after a fresh
 clone, after a `make update-deps`, or after a reboot.
 
-### 1. Clone and symlink
+### 1. Clone
 
 ```bash
-git clone git@github.com:ben-anchr/dev-mcps.git ~/Git/dev-mcps
-cd ~/Git/dev-mcps/servers/whatsapp
-ln -s ~/Git/whatsapp-mcp /path/to/this/casper/workspace/whatsapp-mcp
+git clone git@github.com:ben-anchr/dev-mcps.git
+cd dev-mcps/servers/whatsapp
 ```
 
-The symlink is so Cursor's project shows the repo without bringing it into
-the worktree.
+If `dev-mcps` is already in your editor workspace (e.g. melchior), open
+`servers/whatsapp` directly — no extra clone or symlink needed.
 
 ### 2. Toolchain prerequisites
 
@@ -55,16 +54,21 @@ the worktree.
 ### 3. Configure environment
 
 ```bash
-cd ~/Git/whatsapp-mcp
 cp .env.example .env
 ```
+
+(Run from `servers/whatsapp`.)
 
 Open `.env` and set at least `WHATSAPP_BRIDGE_PORT=18080` (or any free
 port). Leave everything else at defaults unless you have a reason.
 
 ### 4. Register the MCP server with Cursor
 
-Add the following to your global `mcp.json` (Cursor → Settings → MCP):
+Copy [`configs/cursor.mcp.example.json`](../../configs/cursor.mcp.example.json)
+into your Cursor MCP settings, or add the `whatsapp` entry manually. Paths in
+the example assume **`dev-mcps` is the workspace root**; if you use a global
+`mcp.json` instead, set `--directory` to the absolute path of
+`servers/whatsapp/whatsapp-mcp-server` on your machine.
 
 ```json
 {
@@ -72,7 +76,7 @@ Add the following to your global `mcp.json` (Cursor → Settings → MCP):
     "whatsapp": {
       "command": "uv",
       "args": [
-        "--directory", "/Users/<you>/Git/whatsapp-mcp/whatsapp-mcp-server",
+        "--directory", "servers/whatsapp/whatsapp-mcp-server",
         "run", "main.py"
       ]
     }
@@ -130,7 +134,8 @@ In Cursor, ask the agent:
 
 You should see only the chats you allowlisted. If you see *everything*,
 your allowlist isn't being read — check that `chat-allowlist.txt` exists
-at the repo root and that the bridge log on startup says
+at the server root (same directory as `Makefile` and
+`chat-allowlist.example.txt`) and that the bridge log on startup says
 `allowlist active: N JID(s) allowed`.
 
 ---
@@ -201,7 +206,7 @@ Check the bridge log at startup. If you see:
 allowlist: …/chat-allowlist.txt not present — bridge will STORE ALL CHATS.
 ```
 
-…the file isn't at the repo root, or `chat-allowlist.example.txt` was
+…the file isn't at the server root, or `chat-allowlist.example.txt` was
 copied to a different name. The MCP server logs the same warning.
 
 ### MCP returns empty / `ChatNotAllowed`
@@ -240,12 +245,18 @@ stored name. Prefer JID entries for stability.
 
 ## Updating from upstream
 
+From the **dev-mcps** repo root:
+
 ```bash
-git fetch verygoodplugins main
-git rebase verygoodplugins/main           # or merge, depending on the squash level you want
-make update-deps && make build            # confirm Go still compiles
-make bridge                               # smoke test
+./scripts/sync-upstream.sh whatsapp
+cd servers/whatsapp
+make update-deps && make build   # confirm Go still compiles
+make bridge                      # smoke test
 ```
+
+See [`UPSTREAM.md`](./UPSTREAM.md) and [`FORKS.md`](../../FORKS.md) for pinned
+refs. To pull directly from verygoodplugins instead of the anchr-ai fork,
+add that remote and rebase manually.
 
 If upstream re-introduces `send_*` tool registrations in `main.py`, strip
 them again (see the top of that file for the deliberate omission comment).

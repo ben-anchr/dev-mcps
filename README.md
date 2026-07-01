@@ -45,6 +45,10 @@ Requires `SUPABASE_ACCESS_TOKEN` in the environment.
 
 Example multi-server config: [`configs/cursor.mcp.example.json`](configs/cursor.mcp.example.json)
 
+Paths in the example are relative to the **dev-mcps repo root** (works when
+`dev-mcps` is a workspace folder). For a global Cursor `mcp.json`, use absolute
+paths to `servers/<name>/…` on your machine.
+
 ## Adding a new fork
 
 ```bash
