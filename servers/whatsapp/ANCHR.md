@@ -37,7 +37,8 @@ clone, after a `make update-deps`, or after a reboot.
 ### 1. Clone and symlink
 
 ```bash
-git clone git@github.com:ben-anchr/whatsapp-mcp.git ~/Git/whatsapp-mcp
+git clone git@github.com:ben-anchr/dev-mcps.git ~/Git/dev-mcps
+cd ~/Git/dev-mcps/servers/whatsapp
 ln -s ~/Git/whatsapp-mcp /path/to/this/casper/workspace/whatsapp-mcp
 ```
 

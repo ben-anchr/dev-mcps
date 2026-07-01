@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+
+# Editor
+.idea/
+*.swp
+
+# Env / secrets (each server may have its own .gitignore too)
+.env
+.env.local
+*.pem
+
+# Dependencies (server-local; not committed)
+node_modules/
+
+# WhatsApp runtime state
+servers/whatsapp/store/
+servers/whatsapp/*.db
+servers/whatsapp/chat-allowlist.txt

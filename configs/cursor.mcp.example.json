@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "whatsapp": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "servers/whatsapp/whatsapp-mcp-server",
+        "run",
+        "main.py"
+      ],
+      "env": {
+        "BRIDGE_PORT": "18080"
+      }
+    },
+    "supabase": {
+      "command": "pnpm",
+      "args": [
+        "--dir",
+        "servers/supabase",
+        "exec",
+        "tsx",
+        "packages/mcp-server-supabase/src/transports/stdio.ts",
+        "--read-only",
+        "--project-ref=YOUR_PROJECT_REF",
+        "--features=database,docs"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "YOUR_PAT"
+      }
+    }
+  }
+}

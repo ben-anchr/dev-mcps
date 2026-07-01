@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  whatsapp:
+    name: whatsapp
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: servers/whatsapp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: servers/whatsapp/whatsapp-bridge/go.mod
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Go test
+        run: go test ./...
+        working-directory: servers/whatsapp/whatsapp-bridge
+      - name: Python syntax check
+        run: python -m compileall whatsapp-mcp-server
+
+  supabase:
+    name: supabase
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: servers/supabase
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: servers/supabase/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test:unit
