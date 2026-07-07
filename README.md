@@ -18,6 +18,19 @@ See [`FORKS.md`](FORKS.md) for upstream sync policy and version pins.
 
 ## Quick start
 
+Root [`Makefile`](Makefile) wraps the common cross-server flows (see also
+[`AGENTS.md`](AGENTS.md)):
+
+```bash
+make init      # install deps for every server (one-time)
+make up        # start long-running dev processes (WhatsApp bridge)
+make down      # stop them
+make whatsapp  # run the WhatsApp bridge in the foreground
+make supabase  # run the Supabase MCP server (stdio) in the foreground
+make test      # run every server's test suite
+make help      # list all targets
+```
+
 ### WhatsApp
 
 ```bash

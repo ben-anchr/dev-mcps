@@ -17,3 +17,7 @@ node_modules/
 servers/whatsapp/store/
 servers/whatsapp/*.db
 servers/whatsapp/chat-allowlist.txt
+servers/whatsapp/bridge.log
+
+# Supabase local policy (per-project SQL/tool allowlist)
+servers/supabase/anchr-policy.json
