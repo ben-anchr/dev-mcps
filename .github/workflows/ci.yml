@@ -44,5 +44,6 @@ jobs:
           cache: pnpm
           cache-dependency-path: servers/supabase/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm test:unit
+      - run: pnpm --filter @supabase/mcp-utils build
+      - run: pnpm --filter @supabase/mcp-server-supabase typecheck
+      - run: pnpm --filter @supabase/mcp-server-supabase test:unit

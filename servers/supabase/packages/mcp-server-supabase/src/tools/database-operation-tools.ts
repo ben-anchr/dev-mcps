@@ -184,34 +184,39 @@ export const databaseToolDefs = {
       openWorldHint: true,
     },
   },
-  execute_sql_read: {
-    description:
-      'Executes a read-only SQL query (SELECT / EXPLAIN / WITH…SELECT). Write statements are rejected by the server.',
-    parameters: executeSqlInputSchema,
-    outputSchema: executeSqlOutputSchema,
-    readOnlyBehavior: 'adapt',
-    annotations: {
-      title: 'Execute SQL (read)',
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: true,
-    },
-  },
-  execute_sql_write: {
-    description:
-      'Executes a write SQL statement (INSERT, UPDATE, DELETE, DDL). Blocked when project policy is read-only.',
-    parameters: executeSqlInputSchema,
-    outputSchema: executeSqlOutputSchema,
-    annotations: {
-      title: 'Execute SQL (write)',
-      readOnlyHint: false,
-      destructiveHint: true,
-      idempotentHint: false,
-      openWorldHint: true,
-    },
-  },
 } as const satisfies ToolDefs;
+
+// Anchr-only runtime tool defs (kept out of `databaseToolDefs` so they do not
+// enter the static schema surface / upstream schema tests). They are only
+// registered by `getDatabaseTools` when a policy enables split SQL tools.
+const executeSqlReadDef = {
+  description:
+    'Executes a read-only SQL query (SELECT / EXPLAIN / WITH…SELECT). Write statements are rejected by the server.',
+  parameters: executeSqlInputSchema,
+  outputSchema: executeSqlOutputSchema,
+  readOnlyBehavior: 'adapt',
+  annotations: {
+    title: 'Execute SQL (read)',
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: true,
+  },
+} as const;
+
+const executeSqlWriteDef = {
+  description:
+    'Executes a write SQL statement (INSERT, UPDATE, DELETE, DDL). Blocked when project policy is read-only.',
+  parameters: executeSqlInputSchema,
+  outputSchema: executeSqlOutputSchema,
+  annotations: {
+    title: 'Execute SQL (write)',
+    readOnlyHint: false,
+    destructiveHint: true,
+    idempotentHint: false,
+    openWorldHint: true,
+  },
+} as const;
 
 function logSqlToolCall(
   toolName: string,
@@ -481,7 +486,7 @@ export function getDatabaseTools({
     ...(splitSqlTools
       ? {
           execute_sql_read: injectableTool({
-            ...databaseToolDefs.execute_sql_read,
+            ...executeSqlReadDef,
             inject: { project_id },
             execute: async ({ query, project_id }) =>
               runExecuteSql({
@@ -491,7 +496,7 @@ export function getDatabaseTools({
               }),
           }),
           execute_sql_write: injectableTool({
-            ...databaseToolDefs.execute_sql_write,
+            ...executeSqlWriteDef,
             inject: { project_id },
             execute: async ({ query, project_id }) =>
               runExecuteSql({

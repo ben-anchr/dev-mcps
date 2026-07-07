@@ -76,6 +76,6 @@ describe('loadPolicyFromFile', () => {
     const dir = mkdtempSync(join(tmpdir(), 'anchr-policy-'));
     const path = join(dir, 'policy.json');
     writeFileSync(path, JSON.stringify(policy));
-    expect(loadPolicyFromFile(path).projects.dev_xyz.sql).toBe('read');
+    expect(loadPolicyFromFile(path).projects.dev_xyz?.sql).toBe('read');
   });
 });
