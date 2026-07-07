@@ -17,7 +17,7 @@ classifiers = [
 ]
 dependencies = [
     "httpx>=0.28.1",
-    "mcp[cli]>=1.27.1",
+    "mcp[cli]>=1.28.1",
     "requests>=2.34.2",
     "anyio<4.14",
 ]
