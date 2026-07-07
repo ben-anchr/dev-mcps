@@ -16,6 +16,8 @@ import { getEdgeFunctionTools } from './tools/edge-function-tools.js';
 import { getStorageTools } from './tools/storage-tools.js';
 import type { FeatureGroup } from './types.js';
 import { parseFeatureGroups } from './util.js';
+import type { AnchrPolicy } from './anchr/policy.js';
+import { filterToolsByPolicy } from './anchr/policy.js';
 
 const { version } = packageJson;
 
@@ -53,6 +55,11 @@ export type SupabaseMcpServerOptions = {
    * Callback for after a supabase tool is called.
    */
   onToolCall?: ToolCallCallback;
+
+  /**
+   * Anchr per-project tool + SQL policy (see anchr-policy.example.json).
+   */
+  policy?: AnchrPolicy;
 };
 
 const DEFAULT_FEATURES: FeatureGroup[] = [
@@ -95,6 +102,7 @@ export function createSupabaseMcpServer(options: SupabaseMcpServerOptions) {
     features,
     contentApiUrl = 'https://supabase.com/docs/api/graphql',
     onToolCall,
+    policy,
   } = options;
 
   const contentApiClientPromise = createContentApiClient(contentApiUrl, {
@@ -162,6 +170,7 @@ export function createSupabaseMcpServer(options: SupabaseMcpServerOptions) {
             database,
             projectId,
             readOnly,
+            policy,
           })
         );
       }
@@ -190,6 +199,10 @@ export function createSupabaseMcpServer(options: SupabaseMcpServerOptions) {
 
       if (storage && enabledFeatures.has('storage')) {
         Object.assign(tools, getStorageTools({ storage, projectId, readOnly }));
+      }
+
+      if (policy) {
+        return filterToolsByPolicy(tools, policy) as Record<string, Tool>;
       }
 
       return tools;

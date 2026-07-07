@@ -20,8 +20,7 @@
         "exec",
         "tsx",
         "packages/mcp-server-supabase/src/transports/stdio.ts",
-        "--read-only",
-        "--project-ref=YOUR_PROJECT_REF",
+        "--policy-file=anchr-policy.json",
         "--features=database,docs"
       ],
       "env": {

@@ -12,7 +12,7 @@ and Anchr-specific hardening (allowlists, read-only surfaces, etc.).
 | Server | Path | Upstream | Pinned | Anchr changes |
 |--------|------|----------|--------|---------------|
 | WhatsApp | [`servers/whatsapp/`](servers/whatsapp/) | [`anchr-ai/whatsapp-dev-mcp`](https://github.com/anchr-ai/whatsapp-dev-mcp) → `verygoodplugins/whatsapp-mcp` | `main` (imported 2026-07-01) | Read-only tools, chat allowlist — see [`ANCHR.md`](servers/whatsapp/ANCHR.md) |
-| Supabase | [`servers/supabase/`](servers/supabase/) | [`supabase/mcp`](https://github.com/supabase/mcp) | `mcp-server-supabase-v0.8.2` | Baseline import; granular tool allowlists planned — see [`ANCHR.md`](servers/supabase/ANCHR.md) |
+| Supabase | [`servers/supabase/`](servers/supabase/) | [`supabase/mcp`](https://github.com/supabase/mcp) | `mcp-server-supabase-v0.8.2` | `anchr-policy.json` per-project SQL + tool allowlists — see [`ANCHR.md`](servers/supabase/ANCHR.md) |
 
 See [`FORKS.md`](FORKS.md) for upstream sync policy and version pins.
 

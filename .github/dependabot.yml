@@ -1,0 +1,44 @@
+version: 2
+updates:
+  # GitHub Actions used by the monorepo's own workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - github-actions
+
+  # Supabase MCP fork — pnpm workspace
+  - package-ecosystem: npm
+    directory: /servers/supabase
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - server:supabase
+    commit-message:
+      prefix: "chore(supabase)"
+
+  # WhatsApp MCP fork — Go bridge
+  - package-ecosystem: gomod
+    directory: /servers/whatsapp/whatsapp-bridge
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - server:whatsapp
+    commit-message:
+      prefix: "chore(whatsapp)"
+
+  # WhatsApp MCP fork — Python server
+  - package-ecosystem: pip
+    directory: /servers/whatsapp/whatsapp-mcp-server
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - server:whatsapp
+    commit-message:
+      prefix: "chore(whatsapp)"

@@ -6,6 +6,7 @@ import packageJson from '../../package.json' with { type: 'json' };
 import { createSupabaseApiPlatform } from '../platform/api-platform.js';
 import { createSupabaseMcpServer } from '../server.js';
 import { parseList } from './util.js';
+import { loadPolicyFromFile } from '../anchr/policy.js';
 
 const { version } = packageJson;
 
@@ -18,6 +19,7 @@ async function main() {
       ['api-url']: apiUrl,
       ['version']: showVersion,
       ['features']: cliFeatures,
+      ['policy-file']: policyFile,
     },
   } = parseArgs({
     options: {
@@ -40,6 +42,9 @@ async function main() {
       ['features']: {
         type: 'string',
       },
+      ['policy-file']: {
+        type: 'string',
+      },
     },
   });
 
@@ -58,6 +63,12 @@ async function main() {
   }
 
   const features = cliFeatures ? parseList(cliFeatures) : undefined;
+  const policy =
+    policyFile != null
+      ? loadPolicyFromFile(policyFile)
+      : process.env.ANCHR_MCP_POLICY_FILE
+        ? loadPolicyFromFile(process.env.ANCHR_MCP_POLICY_FILE)
+        : undefined;
 
   const platform = createSupabaseApiPlatform({
     accessToken,
@@ -69,6 +80,7 @@ async function main() {
     projectId,
     readOnly,
     features,
+    policy,
   });
 
   const transport = new StdioServerTransport();

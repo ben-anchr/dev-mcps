@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "splitSqlTools": true,
+  "projects": {
+    "YOUR_PROD_PROJECT_REF": {
+      "sql": "deny",
+      "tools": []
+    },
+    "YOUR_DEV_PROJECT_REF": {
+      "sql": "read",
+      "tools": [
+        "list_tables",
+        "list_extensions",
+        "list_migrations",
+        "execute_sql_read",
+        "search_docs"
+      ]
+    },
+    "YOUR_STAGING_PROJECT_REF": {
+      "sql": "write",
+      "tools": "*"
+    }
+  },
+  "default": {
+    "sql": "deny"
+  }
+}
