@@ -11,7 +11,7 @@ onlyBuiltDependencies:
 
 catalog:
   '@ai-sdk/anthropic': ^3.0.47
-  '@ai-sdk/mcp': ^1.0.21
+  '@ai-sdk/mcp': ^2.0.7
   '@modelcontextprotocol/sdk': ^1.25.2
   ai: ^6.0.100
   zod: ^3.25.0 || ^4.0.0
