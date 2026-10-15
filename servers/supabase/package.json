@@ -7,7 +7,7 @@
     "format:check": "biome check ."
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.5.2",
     "pkg-pr-new": "^0.0.68",
     "supabase": "^2.1.1"
   }
